@@ -3714,6 +3714,8 @@ The following additional options are supported:
 If a pattern is supplied without supplying the 'r' option, sort
 the contents of the lines after skipping the pattern.
 
+If the pattern is empty, the last search pattern is used instead.
+
 The 'bang' argument means to sort in reverse order."
   :motion mark-whole-buffer
   :move-point nil
@@ -3729,7 +3731,10 @@ The 'bang' argument means to sort in reverse order."
       (if (memq (aref args 0) '(?i ?n ?x ?o ?u ?r))
           (setq options args)
         (setq args (evil-delimited-arguments args 2))
-        (setq pat (car args)
+        ;; Use the last search pattern when a pattern is provided, but is empty
+        (setq pat (if (string= (car args) "")
+                      (evil-ex-pattern-regex evil-ex-search-pattern)
+                    (car args))
               options (cadr args))))
     (dolist (opt (append options nil))
       (cond
