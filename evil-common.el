@@ -2429,34 +2429,31 @@ The tracked insertion is set to `evil-last-insertion'."
 
 (defun evil-kill-new (text &optional register)
   "Like `kill-new', but also handle `evil' registers.
-If REGISTER is provided and it is the black hole register, ?_,
-don't do anything. When REGISTER is not the black hole register,
-store TEXT in the `kill-ring' and if `evil-is-yank-and-delete' is
-nil, store TEXT in the yank register, ?0.
+TEXT is stored in the `kill-ring' unless REGISTER is the black
+hole register, ?_, in which case `evil-kill-new' does nothing.
 
-If `evil-is-yank-and-delete' is non-nil, the yanked TEXT is
-considered flagged for deletion from the buffer. TEXT is
-therefore considered deleted TEXT and will not be stored in the
-yank register, but will be stored in the first delete register,
-?1, or the small delete register, ?-, when TEXT is within a line.
-Before TEXT is placed in register ?1, the current contents of the
-delete registers, ?1 thru ?9, will be shifted and the contents of
+If REGISTER is nil, store TEXT in the yank register, ?0, if
+`this-command' is not `evil-delete'. When the current command is
+`evil-delete', store TEXT in the first delete register, ?1, or
+the small delete register, ?-, when TEXT is within a line. When
+storing TEXT in register ?1, the current contents of the delete
+registers, ?1 thru ?9, will be shifted and the contents of the
 oldest register, ?9, dropped if needed.
 
-If REGISTER is provided and is not the black hole register, do
-not store TEXT in the yank or delete registers, only store TEXT
-in REGISTER. As a special case, if the motion used to delete TEXT
-is one of `evil-special-delete-motions', store TEXT in the first
+If REGISTER is not nil or the black hole register, only store
+TEXT in REGISTER. As a special case, if `this-command' is
+`evil-delete' and the motion used to delete TEXT is one of
+`evil-special-delete-motions', also store TEXT in the first
 delete register even when REGISTER is provided. And if TEXT is
-within a line, store it in small delete register as well."
+within a line, store it in the small delete register as well."
   (prog1 text
     (unless (eq register ?_)
       (kill-new text)
       (if register (evil-set-register register text)
-        (unless evil-is-yank-and-delete
+        (unless (eq this-command 'evil-delete)
           ;; set the yank register
           (evil-set-register ?0 text)))
-      (when evil-is-yank-and-delete
+      (when (eq this-command 'evil-delete)
         (let ((delete-motion
                (memq evil-this-motion evil-special-delete-motions))
               (within-line (not (string-match-p "\n" text))))

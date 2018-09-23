@@ -1533,11 +1533,6 @@ buffer-region of the newly inserted text.")
   "The last piece of deleted text.
 The text should be less than a line.")
 
-(defvar evil-is-yank-and-delete nil
-  "Whether a yank command is being called due to text being deleted.
-Used to distinguish between a yank or a yank followed by a delete
-when setting the numbered registers.")
-
 (defvar evil-delete-kill-ring (make-list 9 "")
   "The kill ring that stores text for the 1-9 registers.")
 

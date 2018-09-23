@@ -1347,7 +1347,7 @@ or line COUNT to the top of the window."
   "Delete text from BEG to END with TYPE.
 Save in REGISTER or in the kill-ring with YANK-HANDLER."
   (interactive "<R><x><y>")
-  (let ((evil-is-yank-and-delete t))
+  (let ((this-command 'evil-delete))
     (evil-yank beg end type register yank-handler))
   (cond
    ((eq type 'block)
