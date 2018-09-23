@@ -1313,7 +1313,9 @@ or line COUNT to the top of the window."
 ;;; Operator commands
 
 (evil-define-operator evil-yank (beg end type register yank-handler)
-  "Saves the characters in motion into the kill-ring."
+  "Save text from BEG to END with TYPE.
+Save in REGISTER or in the `kill-ring' with YANK-HANDLER using
+`evil-kill-new'."
   :move-point nil
   :repeat nil
   (interactive "<R><x><y>")
@@ -1345,7 +1347,8 @@ or line COUNT to the top of the window."
 
 (evil-define-operator evil-delete (beg end type register yank-handler)
   "Delete text from BEG to END with TYPE.
-Save in REGISTER or in the kill-ring with YANK-HANDLER."
+Save in REGISTER or in the `kill-ring' with YANK-HANDLER using
+`evil-kill-new'."
   (interactive "<R><x><y>")
   (let ((this-command 'evil-delete))
     (evil-yank beg end type register yank-handler))
